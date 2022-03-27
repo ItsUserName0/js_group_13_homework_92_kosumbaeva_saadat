@@ -32,7 +32,7 @@ export class UsersEffects {
     mergeMap(({userData}) => this.usersService.register(userData).pipe(
       map(user => registerUserSuccess({user})),
       tap(() => {
-        void this.router.navigate(['/']);
+        void this.router.navigate(['/chat']);
         this.helpers.openSnackBar('Registered successful!');
       }),
       this.helpers.catchServerError(registerUserFailure),
@@ -44,7 +44,7 @@ export class UsersEffects {
     mergeMap(({userData}) => this.usersService.login(userData).pipe(
       map(user => loginUserSuccess({user})),
       tap(() => {
-        void this.router.navigate(['/']);
+        void this.router.navigate(['/chat']);
         this.helpers.openSnackBar('Login successful!');
       }),
       this.helpers.catchServerError(loginUserFailure),
@@ -58,7 +58,10 @@ export class UsersEffects {
       if (user) {
         return this.usersService.logout(user.token).pipe(
           map(() => logoutUser()),
-          tap(() => this.helpers.openSnackBar('Logout successful!')),
+          tap(() => {
+            void this.router.navigate(['/']);
+            this.helpers.openSnackBar('Logout successful!')
+          }),
         );
       }
 

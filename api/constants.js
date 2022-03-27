@@ -1,0 +1,11 @@
+const PREV_MESSAGES = 'PREV_MESSAGES';
+const SEND_MESSAGE = 'SEND_MESSAGE';
+const NEW_MESSAGE = 'NEW_MESSAGE';
+const LOGIN = 'LOGIN';
+
+module.exports = {
+  PREV_MESSAGES,
+  SEND_MESSAGE,
+  NEW_MESSAGE,
+  LOGIN,
+};
