@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const {nanoid} = require('nanoid');
-const config = require('config');
+const config = require('./config');
 const User = require('./models/User');
 
 const run = async () => {
@@ -26,6 +26,8 @@ const run = async () => {
       token: nanoid(),
     },
   );
+
+  await mongoose.connection.close();
 };
 
-run().catch(e => console.log(e));
+run().catch(e => console.error(e));

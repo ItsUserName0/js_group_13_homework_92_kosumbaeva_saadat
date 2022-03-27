@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <div class="container toolbar" fxLayout="row" fxLayoutAlign="space-between center">
-    <a routerLink="/">Logo</a>
+    <a routerLink="/">Chat</a>
     <nav *ngIf="!(user | async) else userMenu">
       <a routerLink="/register" mat-button>REGISTER</a>
       <a routerLink="/login" mat-button>SIGN IN</a>
@@ -13,13 +13,7 @@
 
 <ng-template #userMenu>
   <nav>
-  <span>Hello, {{ (user | async)?.['displayName'] }}</span>
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>account_circle</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item disabled>{{ (user | async)?.['email'] }}</button>
-      <button mat-menu-item (click)="logout()">Logout</button>
-    </mat-menu>
+    <span>Hello, {{ (user | async)?.['displayName'] }}</span>
+    <button mat-button (click)="logout()">Logout</button>
   </nav>
 </ng-template>

@@ -1,0 +1,30 @@
+<mat-card>
+  <mat-card-content class="chat" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="space-between stretch">
+    <fieldset fxFlex="20%">
+      <legend><strong>Online users</strong></legend>
+      <p>user1</p>
+      <p>user2</p>
+      <p>user3</p>
+      <p>user4</p>
+    </fieldset>
+
+    <div fxFlex="80%" fxLayout="column" fxLayoutGap="16px" class="chat-room">
+      <fieldset class="messages-area" fxLayout="column" fxLayoutAlign="flex-end">
+        <legend><strong>Chat room</strong></legend>
+        <p><strong>User1: </strong>Hello people!</p>
+        <p><strong>User2: </strong>Hi!</p>
+        <p><strong>User3: </strong>Boo!</p>
+      </fieldset>
+      <form #f="ngForm" (ngSubmit)="onSubmit()" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="center">
+        <mat-form-field appearance="outline" fxFlex="80%">
+          <mat-label>Enter message</mat-label>
+          <input name="text" matInput ngModel>
+        </mat-form-field>
+        <button mat-raised-button type="submit" color="primary" fxFlex="20%">Send</button>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+
