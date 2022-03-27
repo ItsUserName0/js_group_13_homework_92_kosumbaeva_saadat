@@ -5,6 +5,13 @@ export interface User {
   token: string,
 }
 
+export interface UserData {
+  user: {
+    _id: string,
+    displayName: string,
+  }
+}
+
 export interface RegisterUserData {
   email: string,
   password: string,

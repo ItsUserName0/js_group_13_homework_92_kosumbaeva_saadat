@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Message } from '../../models/message.model';
 import { Observable, Subscription } from 'rxjs';
-import { User } from '../../models/user.model';
+import { User, UserData } from '../../models/user.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/types';
 import { NgForm } from '@angular/forms';
@@ -19,7 +19,7 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
   userData: null | User = null;
   ws!: WebSocket;
   messages!: Message[];
-  users!: string[];
+  users!: UserData[];
 
   constructor(private store: Store<AppState>) {
     this.user = store.select(state => state.users.user);
@@ -37,7 +37,7 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
     this.ws.onopen = () => {
       this.ws.send(JSON.stringify({
         type: 'LOGIN',
-        token: this.userData?.token,
+        user: {token: this.userData?.token, displayName: this.userData?.displayName},
       }));
     };
 
@@ -50,12 +50,25 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
     this.ws.onmessage = event => {
       const decodedMessage = JSON.parse(event.data);
 
+      if (decodedMessage.type === 'PREV_USERS') {
+        this.users = decodedMessage.users;
+      }
+
+      if (decodedMessage.type === 'NEW_USER') {
+        this.users.push(decodedMessage.user);
+      }
+
       if (decodedMessage.type === 'PREV_MESSAGES') {
         this.messages = decodedMessage.messages;
+        this.messages.reverse();
       }
 
       if (decodedMessage.type === 'NEW_MESSAGE') {
         this.messages.push(decodedMessage.message[0]);
+        if (this.messages.length > 30) {
+          this.messages = this.messages.splice(-30);
+        }
+        this.messages.reverse();
       }
     }
   }
