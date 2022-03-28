@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-content fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="space-between stretch">
+  <mat-card-content fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="space-between stretch" class="chat">
     <fieldset fxFlex="20%">
       <legend><strong>Online users</strong></legend>
       <p *ngFor="let u of users">{{ u.user.displayName }}</p>
@@ -11,15 +11,15 @@
         <div *ngFor="let m of messages" fxLayout="row" fxLayoutAlign="space-between">
           <span fxFlex="20%"><strong>{{ m.author.displayName }}: </strong></span>
           <span fxFlex="50%">{{ m.text }}</span>
-          <span class="muted" fxFlex="30%">({{ m.datetime }})</span>
+          <span class="muted" fxFlex="30%">( {{ m.datetime }} )</span>
         </div>
       </fieldset>
       <form #f="ngForm" (ngSubmit)="onSubmit()" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="center">
         <mat-form-field appearance="outline" fxFlex="80%">
           <mat-label>Enter message</mat-label>
-          <input name="text" matInput ngModel>
+          <input name="text" matInput ngModel #text="ngModel">
         </mat-form-field>
-        <button mat-raised-button type="submit" color="primary" fxFlex="20%">Send</button>
+        <button mat-raised-button type="submit" color="primary" fxFlex="20%" [disabled]="!text.value || !text.value.trim().length">Send</button>
       </form>
     </div>
   </mat-card-content>

@@ -32,45 +32,48 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.ws = new WebSocket('ws://localhost:8000/chat');
+    const start = () => {
+      this.ws = new WebSocket('ws://localhost:8000/chat');
 
-    this.ws.onopen = () => {
-      this.ws.send(JSON.stringify({
-        type: 'LOGIN',
-        user: {token: this.userData?.token, displayName: this.userData?.displayName},
-      }));
-    };
+      this.ws.onopen = () => {
+        this.ws.send(JSON.stringify({
+          type: 'LOGIN',
+          user: {token: this.userData?.token, displayName: this.userData?.displayName},
+        }));
+      };
 
-    this.ws.onclose = () => {
-      setTimeout(() => {
-        this.ws = new WebSocket('ws://localhost:8000/chat');
-      }, 1000);
-    }
-
-    this.ws.onmessage = event => {
-      const decodedMessage = JSON.parse(event.data);
-
-      if (decodedMessage.type === 'PREV_USERS') {
-        this.users = decodedMessage.users;
+      this.ws.onclose = () => {
+        setTimeout(() => {
+          start();
+        }, 3000);
       }
 
-      if (decodedMessage.type === 'NEW_USER') {
-        this.users.push(decodedMessage.user);
-      }
+      this.ws.onmessage = event => {
+        const decodedMessage = JSON.parse(event.data);
 
-      if (decodedMessage.type === 'PREV_MESSAGES') {
-        this.messages = decodedMessage.messages;
-        this.messages.reverse();
-      }
-
-      if (decodedMessage.type === 'NEW_MESSAGE') {
-        this.messages.push(decodedMessage.message[0]);
-        if (this.messages.length > 30) {
-          this.messages = this.messages.splice(-30);
+        if (decodedMessage.type === 'PREV_USERS') {
+          this.users = decodedMessage.users;
         }
-        this.messages.reverse();
+
+        if (decodedMessage.type === 'NEW_USER') {
+          this.users.push(decodedMessage.user);
+        }
+
+        if (decodedMessage.type === 'PREV_MESSAGES') {
+          this.messages = decodedMessage.messages;
+          this.messages.reverse();
+        }
+
+        if (decodedMessage.type === 'NEW_MESSAGE') {
+          this.messages.push(decodedMessage.message[0]);
+
+          if (this.messages.length > 30) {
+            this.messages = this.messages.splice(-30);
+          }
+        }
       }
-    }
+    };
+    start();
   }
 
   onSubmit() {
