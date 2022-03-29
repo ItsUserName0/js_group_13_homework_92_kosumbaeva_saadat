@@ -2,7 +2,7 @@
   <mat-card-content fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="space-between stretch" class="chat">
     <fieldset fxFlex="20%">
       <legend><strong>Online users</strong></legend>
-      <p *ngFor="let u of users">{{ u.user.displayName }}</p>
+      <p *ngFor="let u of users">{{ u.displayName }}</p>
     </fieldset>
 
     <div fxFlex="80%" fxLayout="column" fxLayoutGap="16px" class="chat-room">

@@ -20,6 +20,7 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
   ws!: WebSocket;
   messages!: Message[];
   users!: UserData[];
+  isClosed = false;
 
   constructor(private store: Store<AppState>) {
     this.user = store.select(state => state.users.user);
@@ -42,10 +43,15 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
         }));
       };
 
-      this.ws.onclose = () => {
-        setTimeout(() => {
-          start();
-        }, 3000);
+      this.ws.onclose = (e) => {
+        if (e.code === 1005) {
+          this.isClosed = true;
+        }
+        if (!this.isClosed) {
+          setTimeout(() => {
+            start();
+          }, 3000);
+        }
       }
 
       this.ws.onmessage = event => {
@@ -57,6 +63,12 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
 
         if (decodedMessage.type === 'NEW_USER') {
           this.users.push(decodedMessage.user);
+        }
+
+        if (decodedMessage.type === 'LOGOUT') {
+          const user: UserData = decodedMessage.user;
+          const index = this.users.map(user => user._id).indexOf(user._id);
+          this.users.splice(index, 1);
         }
 
         if (decodedMessage.type === 'PREV_MESSAGES') {
@@ -86,6 +98,7 @@ export class ChatComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
+    this.isClosed = true;
     this.ws.close();
   }
 }

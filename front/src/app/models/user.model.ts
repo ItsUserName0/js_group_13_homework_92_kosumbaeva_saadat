@@ -6,10 +6,8 @@ export interface User {
 }
 
 export interface UserData {
-  user: {
-    _id: string,
-    displayName: string,
-  }
+  _id: string,
+  displayName: string,
 }
 
 export interface RegisterUserData {
